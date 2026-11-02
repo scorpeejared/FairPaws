@@ -1,17 +1,22 @@
 {
   "expo": {
-    "name": "SplitFair",
-    "slug": "SplitFair",
+    "name": "Fair Paws",
+    "slug": "fairpaws",
+    "scheme": "fairpaws",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#FFF7EF",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fairpaws.app"
     },
     "android": {
+      "package": "com.fairpaws.app",
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#FFC4D1",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -19,7 +24,32 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "bundler": "metro",
+      "output": "single",
+      "name": "Fair Paws",
+      "shortName": "Fair Paws",
+      "description": "Split restaurant bills fairly. Works offline.",
+      "themeColor": "#FFF7EF",
+      "backgroundColor": "#FFF7EF",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#FFF7EF",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#171213"
+          }
+        }
+      ],
+      "expo-font"
+    ]
   }
 }

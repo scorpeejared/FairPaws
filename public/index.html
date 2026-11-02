@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- viewport-fit=cover lets the app draw under the iPhone notch; safe-area insets keep content clear of it. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>%WEB_TITLE%</title>
+    <meta name="description" content="Split restaurant bills fairly. Works offline." />
+
+    <!-- Install to the iPhone / Android Home Screen -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Fair Paws" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#FFF7EF" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#171213" media="(prefers-color-scheme: dark)" />
+
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        /* Matches the app background so there's no white flash while it loads. */
+        background: #fff7ef;
+        overscroll-behavior: none;
+        -webkit-text-size-adjust: 100%;
+        -webkit-tap-highlight-color: transparent;
+        /* Stops double-tap-to-zoom from delaying taps. */
+        touch-action: manipulation;
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #171213;
+        }
+      }
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      // Offline support: cache the app after the first visit. Skipped on the dev server, whose
+      // bundles are served from `*.bundle` URLs and must never be cached.
+      window.addEventListener('load', function () {
+        if (!('serviceWorker' in navigator)) return;
+        var isDevServer = Array.prototype.some.call(document.scripts, function (s) {
+          return /\.bundle(\?|$)/.test(s.src);
+        });
+        if (isDevServer) return;
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      });
+    </script>
+  </body>
+</html>
