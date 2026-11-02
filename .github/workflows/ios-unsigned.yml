@@ -1,0 +1,57 @@
+name: iOS unsigned build
+
+# Produces an unsigned device .ipa for sideloading (e.g. Sideloadly with a free
+# Apple ID, which re-signs it). Run it from the Actions tab and download the
+# FairPaws-unsigned-ipa artifact.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Generates ios/ (and runs pod install) from app.json.
+      - run: npx expo prebuild --platform ios --clean
+        env:
+          CI: '1'
+
+      - name: Build for device without code signing
+        run: |
+          WORKSPACE=$(ls -d ios/*.xcworkspace | head -n 1)
+          SCHEME=$(basename "$WORKSPACE" .xcworkspace)
+          echo "Building $WORKSPACE, scheme $SCHEME"
+          xcodebuild build \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package .ipa
+        run: |
+          APP=$(ls -d build/Build/Products/Release-iphoneos/*.app | head -n 1)
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -qry FairPaws-unsigned.ipa Payload
+          ls -lh FairPaws-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FairPaws-unsigned-ipa
+          path: FairPaws-unsigned.ipa
+          retention-days: 7
